@@ -1,0 +1,19 @@
+{
+    "name": "iamntz/carbon-taxonomy-term-picker",
+    "description": "Provides a taxonomy and/or term picker.",
+    "keywords": ["wordpress", "carbon-field"],
+    "homepage": "https://github.com/iamntz/carbon-taxonomy-term-picker",
+    "type": "library",
+    "license": "GPL-2.0+",
+    "require": {
+        "htmlburger/carbon-fields": "^2.0"
+    },
+    "autoload": {
+        "files": [
+            "init.php"
+        ],
+        "psr-4": {
+            "iamntz\\carbon\\taxonomyTermPicker\\": "src/"
+        }
+    }
+}
