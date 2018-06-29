@@ -19,7 +19,6 @@ import {
 	cloneDeep,
 	without,
 	isMatch,
-  isString,
 	sortBy,
 	includes,
 	find
@@ -129,14 +128,18 @@ export const enhance = compose(
 
 					if (child.child) {
 						items.push(child.child);
-						if (!isString(child.child)) {
-							parseOptions(child.child, (nesting + 1));
-						}
+						parseOptions(child.child, (nesting + 1));
 					}
-				});
+				})
 			}
 
 			parseOptions(initialOptions, 0);
+
+			console.log(items);
+
+			// items.push(initialOptions.options[1].child);
+
+			// console.log(initialOptions.options[1].child);
 
 			this.props.setItems(items);
 		}

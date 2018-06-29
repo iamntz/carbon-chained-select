@@ -27,15 +27,19 @@ import { AsyncCreatable } from 'react-select';
 
 import 'react-select/dist/react-select.css';
 
-const getOptions = (input) => {
-  console.log(input);
-  return fetch('/rest.php')
-    .then((response) => {
-      return response.json();
-    }).then((json) => {
-      return { options: json };
+const getOptions = (input, callback) => {
+  setTimeout(() => {
+    callback(null, {
+      options: [
+        { value: 'one', label: 'One' },
+        { value: 'two', label: 'Two' }
+      ],
+      // CAREFUL! Only set this to true when there are no more options,
+      // or more specific queries will not be sent to the server.
+      complete: true
     });
-}
+  }, 500);
+};
 
 export const SelectField = ({
   item,
@@ -55,8 +59,8 @@ export const SelectField = ({
     label = <label>{item.label}</label>
   }
 
-  console.log(item.options);
-  if (isString(item.options)) {
+  console.log('async!', item);
+  if (item.isAsync) {
     component = <Async name={name} onChange={handleChange} value={value} loadOptions={getOptions} />
   } else {
     component = <Select name={name} clearableValue={key} onChange={handleChange} value={value} options={item.options} />
