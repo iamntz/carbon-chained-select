@@ -4,41 +4,25 @@ namespace iamntz\carbon\taxonomyTermPicker;
 
 use Carbon_Fields\Field\Field;
 use Carbon_Fields\Field\Predefined_Options_Field;
+use Carbon_Fields\Value_Set\Value_Set;
 
 class TaxonomyTermPicker_Field extends Predefined_Options_Field
 {
+	protected $default_value = [];
+	protected $value_delimiter = '|';
+
+	public function __construct($type, $name, $label)
+	{
+		$this->set_value_set(new Value_Set(Value_Set::TYPE_MULTIPLE_VALUES));
+		parent::__construct($type, $name, $label);
+	}
+
 	public static function admin_enqueue_scripts()
 	{
 		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_TAXONOMY_TERM_PICKER_DIR);
 
 		wp_enqueue_script('taxonomy-term-picker', $root_uri . '/assets/js/bundle.js', ['carbon-fields-boot']);
 		wp_enqueue_style('taxonomy-term-picker', $root_uri . '/assets/css/field.css');
-	}
-
-	protected function load_options()
-	{
-		$options = [];
-
-		foreach ($this->option_collections as $key => $collection) {
-			$collection_items = [];
-
-			if (is_callable($collection)) {
-				$collection_items = call_user_func($collection);
-				if (!is_array($collection_items)) {
-					continue;
-				}
-			} else {
-				$collection_items = $collection;
-			}
-
-			if ($this->is_indexed_array($options) && $this->is_indexed_array($collection_items)) {
-				$options = array_merge($options, $collection_items);
-			} else {
-				$options = array_replace($options, $collection_items);
-			}
-		}
-
-		return $options;
 	}
 
 	/**
@@ -48,11 +32,28 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 	 */
 	public function set_value_from_input($input)
 	{
-		parent::set_value_from_input($input);
+		if (!isset($input[$this->get_name()])) {
+			return $this->set_value([]);
+		}
 
-		$value = $this->get_value();
+		/**
+		 * In carbon fields, select fields have a validator, that make sure that you can't have values that are not
+		 * provided in the settings. However, considering that we may also have AJAX provided values, we can't make
+		 * this kind of validation.
+		 */
+		// $options_values = $this->get_options_values();
+		// $value = Helper::get_valid_options( $value, $options_values );
 
-		$this->set_value($value);
+		$value = stripslashes_deep($input[$this->get_name()]);
+
+		if (!is_array($value)) {
+			$value = [$value];
+		}
+
+		$value = array_values( $value );
+
+
+		return $this->set_value($value);
 	}
 
 	protected function parse_options($options, $stringify_value = false)
@@ -76,6 +77,7 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 
 			$option = [
 				'value' => $stringify_value ? strval($key) : $key,
+				'child' => [],
 			];
 
 			if (is_array($value)) {
@@ -106,15 +108,19 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 		$options = $this->get_options();
 		$options = $this->parse_options($options, true);
 
-		$postTypes = []; //$this->parse_options($options['post-types'] ?? [], true);
-		$taxonomies = []; // $this->parse_options($options['taxonomies'] ?? [], true);
-		// $value = $this->get_formatted_value();
-
 		$field_data = array_merge($field_data, [
-			'options' => $options,
-			'value' => [],
+			'items' => [$options],
+			'value' => $this->get_formatted_value(),
 		]);
 
+
 		return $field_data;
+	}
+
+	public function get_formatted_value()
+	{
+		$value = $this->get_value();
+
+		return $value;
 	}
 }

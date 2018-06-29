@@ -3,7 +3,16 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
-import { compose, withHandlers, branch, renderComponent, setStatic } from 'recompose';
+import {
+	withState,
+	compose,
+	withHandlers,
+	branch,
+	withProps,
+	renderComponent,
+	lifecycle,
+	setStatic
+} from 'recompose';
 
 /**
  * The internal dependencies.
@@ -20,19 +29,22 @@ import SelectField from './SelectField';
 export const taxonomytermpicker = ({
 	name,
 	field,
-	handleRemove,
-	handleChange
+	items,
+	setItems,
+	handleChange,
+	getFieldValue
 }) => {
+	let value = field.value;
+	console.log(items);
 	return <Field field={field}>
 		<div className="ntz-taxonomy-term-picker-wrapper">
-			<SelectField
-				index='0'
-				label={field.options.label}
-				options={field.options.options}
-				name={name}
-				onRemove={handleRemove}
-				onChange={handleChange}
-			/>
+		{
+			items.map((item, key) => {
+				item.key = key;
+				return <SelectField key={key} item={item} value={value[key] || null} name={`${name}[${key}]`} onChange={handleChange} />
+			})
+		}
+
 		</div>
 	</Field>;
 }
@@ -46,11 +58,25 @@ taxonomytermpicker.propTypes = {
 	name: PropTypes.string,
 	field: PropTypes.shape({
 		id: PropTypes.string,
-		// value: PropTypes.string,
+		value: PropTypes.oneOfType([
+			PropTypes.string,
+			PropTypes.array,
+			PropTypes.object,
+		]),
 	}),
-	handleRemove: PropTypes.func,
+	items:PropTypes.oneOfType([
+		PropTypes.array,
+		PropTypes.object,
+	]),
 	handleChange: PropTypes.func,
 };
+
+taxonomytermpicker.defaultProps = {
+	field:{
+		items: [],
+		value: null
+	}
+}
 
 /**
  * The enhancer.
@@ -68,16 +94,39 @@ export const enhance = compose(
 	 */
 	withSetup(),
 
+	withState('items', 'setItems', []),
+
+	withProps(),
+
+	lifecycle({
+		componentWillMount() {
+			let items = this.props.field.items;
+			console.log(this);
+			console.log(items);
+			this.props.setItems(items);
+		}
+	}),
+
 	/**
 	 * The handlers passed to the component.
 	 */
 	withHandlers({
-		handleRemove: ({ index, onRemove }) => (e) => {
-			console.log(e);
-		},
+		handleChange: ({field, setItems, setFieldValue}) => (select, key) => {
+			let val = field.value;
 
-		handleChange: ({ item, onChange }) => (e) => {
-			console.log(e);
+			if (!select && key) {
+				val = val.slice(0, key);
+			}
+
+			field.value[key] = select ? select.value : false;
+
+			setFieldValue(field.id, val);
+
+			console.log(select);
+			if (select && select.child) {
+			} else {
+				setItems([], key)
+			}
 		}
 	})
 );

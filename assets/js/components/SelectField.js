@@ -11,35 +11,22 @@ import { withHandlers } from 'recompose';
  */
 import { preventDefault } from 'lib/helpers';
 
-import { Async } from 'react-select';
 import Select from 'react-select';
+import { Async } from 'react-select';
+import { AsyncCreatable } from 'react-select';
+
 import 'react-select/dist/react-select.css';
-/**
- * Render a file upload field with a preview thumbnail of the uploaded file.
- *
- * @param  {Object}        props
- * @param  {String}        props.name
- * @param  {Object}        props.field
- * @param  {Function}      props.handleOpenBrowser
- * @param  {Function}      props.handleRemoveItem
- * @return {React.Element}
- */
+
 export const SelectField = ({
-  index,
-  label,
-  options,
+  item,
   name,
-  handleRemoveItem,
+  value,
+  key,
   handleChange
 }) => {
   return <div>
-    <label>{label}</label>
-    <Select
-        name="form-field-name"
-        onChange={handleChange}
-        options={options}
-      />
-    <span className="ntz-taxonomy-term-picker-delete" onClick={handleRemoveItem}>&times;</span>
+    <label>{item.label}</label>
+    <Select key={key} name={name} clearableValue={key} onChange={handleChange} value={value} options={item.options} />
   </div>;
 };
 
@@ -50,21 +37,13 @@ export const SelectField = ({
  */
 SelectField.propTypes = {
   name: PropTypes.string,
-  item: PropTypes.oneOfType([
-    PropTypes.number,
-    PropTypes.string,
-  ]),
-  handleRemoveItem: PropTypes.func,
+  key: PropTypes.number,
   handleChange: PropTypes.func,
 };
 
 const enhance = withHandlers({
-  handleRemoveItem: ({ index, onRemove }) => (select) => {
-    onRemove(select.value);
-  },
-
-  handleChange: ({ item, onChange }) => (select) => {
-    onChange(select.value);
+  handleChange: ({item, onChange}) => (select) => {
+    onChange(select, item.key);
   },
 });
 
