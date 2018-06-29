@@ -3,6 +3,7 @@
  */
 import React from 'react';
 import PropTypes from 'prop-types';
+
 import {
 	withState,
 	compose,
@@ -13,6 +14,16 @@ import {
 	lifecycle,
 	setStatic
 } from 'recompose';
+
+import {
+	cloneDeep,
+	without,
+	isMatch,
+  isString,
+	sortBy,
+	includes,
+	find
+} from 'lodash';
 
 /**
  * The internal dependencies.
@@ -35,7 +46,7 @@ export const taxonomytermpicker = ({
 	getFieldValue
 }) => {
 	let value = field.value;
-	console.log(items);
+	console.log('render:', items);
 	return <Field field={field}>
 		<div className="ntz-taxonomy-term-picker-wrapper">
 		{
@@ -100,9 +111,33 @@ export const enhance = compose(
 
 	lifecycle({
 		componentWillMount() {
-			let items = this.props.field.items;
-			console.log(this);
-			console.log(items);
+			let initialOptions = this.props.field.items;
+			let items = [];
+			let value = this.props.field.value;
+
+			items.push(initialOptions);
+
+			let parseOptions = (children, nesting = 0) => {
+				if (!value[nesting]) {
+					return;
+				}
+
+				children.options.map((child, index) => {
+					if(child.value != value[nesting]) {
+						return;
+					}
+
+					if (child.child) {
+						items.push(child.child);
+						if (!isString(child.child)) {
+							parseOptions(child.child, (nesting + 1));
+						}
+					}
+				});
+			}
+
+			parseOptions(initialOptions, 0);
+
 			this.props.setItems(items);
 		}
 	}),
@@ -111,22 +146,22 @@ export const enhance = compose(
 	 * The handlers passed to the component.
 	 */
 	withHandlers({
-		handleChange: ({field, setItems, setFieldValue}) => (select, key) => {
+		handleChange: ({items, field, setItems, setFieldValue}) => (select, key) => {
 			let val = field.value;
+			let newItems = items.slice(0, key + 1);
 
 			if (!select && key) {
 				val = val.slice(0, key);
 			}
 
 			field.value[key] = select ? select.value : false;
-
 			setFieldValue(field.id, val);
 
-			console.log(select);
 			if (select && select.child) {
-			} else {
-				setItems([], key)
+				newItems.push(select.child)
 			}
+
+			setItems(newItems)
 		}
 	})
 );

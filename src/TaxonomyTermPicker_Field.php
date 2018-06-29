@@ -109,7 +109,7 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 		$options = $this->parse_options($options, true);
 
 		$field_data = array_merge($field_data, [
-			'items' => [$options],
+			'items' => $options,
 			'value' => $this->get_formatted_value(),
 		]);
 

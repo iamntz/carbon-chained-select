@@ -6,6 +6,16 @@ import PropTypes from 'prop-types';
 import cx from 'classnames';
 import { withHandlers } from 'recompose';
 
+import {
+  cloneDeep,
+  without,
+  isMatch,
+  isString,
+  sortBy,
+  includes,
+  find
+} from 'lodash';
+
 /**
  * The internal dependencies.
  */
@@ -17,6 +27,16 @@ import { AsyncCreatable } from 'react-select';
 
 import 'react-select/dist/react-select.css';
 
+const getOptions = (input) => {
+  console.log(input);
+  return fetch('/rest.php')
+    .then((response) => {
+      return response.json();
+    }).then((json) => {
+      return { options: json };
+    });
+}
+
 export const SelectField = ({
   item,
   name,
@@ -24,9 +44,27 @@ export const SelectField = ({
   key,
   handleChange
 }) => {
+  if (!item.options) {
+    return '';
+  }
+
+  let label = '';
+  let component = '';
+
+  if (item.label) {
+    label = <label>{item.label}</label>
+  }
+
+  console.log(item.options);
+  if (isString(item.options)) {
+    component = <Async name={name} onChange={handleChange} value={value} loadOptions={getOptions} />
+  } else {
+    component = <Select name={name} clearableValue={key} onChange={handleChange} value={value} options={item.options} />
+  }
+
   return <div>
-    <label>{item.label}</label>
-    <Select key={key} name={name} clearableValue={key} onChange={handleChange} value={value} options={item.options} />
+    {label}
+    {component}
   </div>;
 };
 
