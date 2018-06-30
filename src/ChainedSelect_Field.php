@@ -76,7 +76,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 
 		$field_data = array_merge($field_data, [
 			'items' => $options,
-			'value' => $this->get_formatted_value(),
+			'value' => $this->get_value(),
 			'valueDelimiter' => $this->valueDelimiter,
 		]);
 
@@ -86,6 +86,15 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	public function get_formatted_value()
 	{
 		$value = $this->get_value();
+
+		$value = array_map(function ($v) {
+			if (strpos($v, $this->valueDelimiter) === false) {
+				return $v;
+			}
+
+			return Delimiter::split($v, $this->valueDelimiter);;
+		}, $value);
+
 		return $value;
 	}
 }
