@@ -51,7 +51,7 @@ export const taxonomytermpicker = ({
 		{
 			items.map((item, key) => {
 				item.key = key;
-				return <SelectField key={key} item={item} value={value[key] || null} name={`${name}[${key}]`} onChange={handleChange} />
+				return <SelectField key={key} config={item.config || {}} item={item} value={value[key] || null} name={`${name}[${key}]`} onChange={handleChange} />
 			})
 		}
 
@@ -134,12 +134,6 @@ export const enhance = compose(
 			}
 
 			parseOptions(initialOptions, 0);
-
-			console.log(items);
-
-			// items.push(initialOptions.options[1].child);
-
-			// console.log(initialOptions.options[1].child);
 
 			this.props.setItems(items);
 		}
