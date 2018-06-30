@@ -11,6 +11,11 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 	protected $default_value = [];
 	protected $value_delimiter = '|';
 
+	protected $config = [
+		'labelKey' => '__label__',
+		'configKey' => '__config__',
+	];
+
 	public function __construct($type, $name, $label)
 	{
 		$this->set_value_set(new Value_Set(Value_Set::TYPE_MULTIPLE_VALUES));
@@ -50,43 +55,52 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 			$value = [$value];
 		}
 
-		$value = array_values( $value );
-
+		$value = array_values($value);
 
 		return $this->set_value($value);
 	}
 
-	protected function parse_options($options, $stringify_value = false)
+	protected function xparse_options($options)
 	{
+		$options = array_merge([
+			'selectOptions' => [],
+			'stringifyValue' => false,
+			'defaultLabel' => null,
+		], $options);
+
 		$parsed = [];
 
-		if (is_callable($options)) {
-			$options = call_user_func($options);
+		if (is_callable($options['selectOptions'])) {
+			$options['selectOptions'] = call_user_func($options['selectOptions']);
 		}
 
-		foreach ($options as $key => $value) {
-			if ($key === '__label__') {
+		foreach ($options['selectOptions'] as $key => $value) {
+			if ($key === $this->config['labelKey']) {
 				$parsed['label'] = $value;
 				continue;
 			}
 
-			if ($key === '__multiple__') {
-				$parsed['multiple'] = $value;
+			if ($key === ($this->config['configKey'] ?? false)) {
+				$parsed['config'] = $value;
 				continue;
 			}
 
 			$option = [
-				'value' => $stringify_value ? strval($key) : $key,
+				'value' => $options['stringifyValue'] ? strval($key) : $key,
+				'label' => $options['defaultLabel'] ?? $key ?? '',
 				'child' => [],
 			];
 
 			if (is_array($value)) {
-				$option['label'] = $value['label'] ?? $key;
-				if (!empty($value['__child__'])) {
-					$option['child'] = is_string($value['__child__']) ? $value['__child__'] : $this->parse_options($value['__child__'], $stringify_value);
-				}
+				$option['label'] = $value[$this->config['labelKey']] ?? $options['defaultLabel'] ?? $key;
+
+				$option['child'] = $this->xparse_options([
+					'selectOptions' => $value[0] ?? $value,
+					'stringifyValue' => $options['stringifyValue'],
+					'defaultLabel' => $option['label']
+				]);
 			} else {
-				$option['label'] = strval($value);
+				$option['label'] = strval($value) ?? $key ?? $options['defaultLabel'];
 			}
 
 			$parsed['options'][] = $option;
@@ -105,14 +119,16 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 	{
 		$field_data = parent::to_json($load);
 
+		$this->config = apply_filters('carbon_chained_select_config', $this->config);
+		$this->config = apply_filters("carbon_chained_select_config/name={$field_data['base_name']}", $this->config);
+
 		$options = $this->get_options();
-		$options = $this->parse_options($options, true);
+		$options = $this->xparse_options(['selectOptions' => $options], true);
 
 		$field_data = array_merge($field_data, [
 			'items' => $options,
 			'value' => $this->get_formatted_value(),
 		]);
-
 
 		return $field_data;
 	}
