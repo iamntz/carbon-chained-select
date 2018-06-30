@@ -27,26 +27,13 @@ import { AsyncCreatable } from 'react-select';
 
 import 'react-select/dist/react-select.css';
 
-const getOptions = (input, callback) => {
-  setTimeout(() => {
-    callback(null, {
-      options: [
-        { value: 'one', label: 'One' },
-        { value: 'two', label: 'Two' }
-      ],
-      // CAREFUL! Only set this to true when there are no more options,
-      // or more specific queries will not be sent to the server.
-      complete: true
-    });
-  }, 500);
-};
-
 export const SelectField = ({
   item,
   name,
   value,
   key,
-  handleChange
+  handleChange,
+  ajaxSearch
 }) => {
   if (!item.options) {
     return '';
@@ -59,16 +46,16 @@ export const SelectField = ({
     label = <label>{item.label}</label>
   }
 
-  console.log('async!', item);
   if (item.isAsync) {
-    component = <Async name={name} onChange={handleChange} value={value} loadOptions={getOptions} />
   } else {
     component = <Select name={name} clearableValue={key} onChange={handleChange} value={value} options={item.options} />
   }
+  let component2 = <Async name={name} onChange={handleChange} value={value} loadOptions={ajaxSearch} />
 
   return <div>
     {label}
     {component}
+    {component2}
   </div>;
 };
 
@@ -81,12 +68,27 @@ SelectField.propTypes = {
   name: PropTypes.string,
   key: PropTypes.number,
   handleChange: PropTypes.func,
+  ajaxSearch: PropTypes.func,
 };
 
 const enhance = withHandlers({
   handleChange: ({item, onChange}) => (select) => {
+    console.log(select);
     onChange(select, item.key);
   },
+
+  ajaxSearch: ({item, value, name}) => (searchString) => {
+    console.log('input: ', searchString);
+    return fetch('/rest.php')
+      .then((response) => {
+        return response.json();
+      }).then((json) => {
+        return { options: json };
+      });
+
+    console.log('a', a);
+    console.log('b', b);
+  }
 });
 
 export default enhance(SelectField);

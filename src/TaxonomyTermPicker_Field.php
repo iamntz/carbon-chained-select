@@ -8,14 +8,6 @@ use Carbon_Fields\Value_Set\Value_Set;
 
 class TaxonomyTermPicker_Field extends Predefined_Options_Field
 {
-	protected $default_value = [];
-	protected $value_delimiter = '|';
-
-	protected $config = [
-		'labelKey' => '__label__',
-		'configKey' => '__config__',
-	];
-
 	public function __construct($type, $name, $label)
 	{
 		$this->set_value_set(new Value_Set(Value_Set::TYPE_MULTIPLE_VALUES));
@@ -60,53 +52,10 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 		return $this->set_value($value);
 	}
 
-	protected function xparse_options($options)
+	protected function xparse_options($config)
 	{
-		$options = array_merge([
-			'selectOptions' => [],
-			'stringifyValue' => false,
-			'defaultLabel' => null,
-		], $options);
-
-		$parsed = [];
-
-		if (is_callable($options['selectOptions'])) {
-			$options['selectOptions'] = call_user_func($options['selectOptions']);
-		}
-
-		foreach ($options['selectOptions'] as $key => $value) {
-			if ($key === $this->config['labelKey']) {
-				$parsed['label'] = $value;
-				continue;
-			}
-
-			if ($key === ($this->config['configKey'] ?? false)) {
-				$parsed['config'] = $value;
-				continue;
-			}
-
-			$option = [
-				'value' => $options['stringifyValue'] ? strval($key) : $key,
-				'label' => $options['defaultLabel'] ?? $key ?? '',
-				'child' => [],
-			];
-
-			if (is_array($value)) {
-				$option['label'] = $value[$this->config['labelKey']] ?? $options['defaultLabel'] ?? $key;
-
-				$option['child'] = $this->xparse_options([
-					'selectOptions' => $value[0] ?? $value,
-					'stringifyValue' => $options['stringifyValue'],
-					'defaultLabel' => $option['label']
-				]);
-			} else {
-				$option['label'] = strval($value) ?? $key ?? $options['defaultLabel'];
-			}
-
-			$parsed['options'][] = $option;
-		}
-
-		return $parsed;
+		$parser = new OptionsParser($config, $this->get_base_name());
+		return $parser->parse();
 	}
 
 	/**
@@ -118,9 +67,6 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 	public function to_json($load)
 	{
 		$field_data = parent::to_json($load);
-
-		$this->config = apply_filters('carbon_chained_select_config', $this->config);
-		$this->config = apply_filters("carbon_chained_select_config/name={$field_data['base_name']}", $this->config);
 
 		$options = $this->get_options();
 		$options = $this->xparse_options(['selectOptions' => $options], true);
