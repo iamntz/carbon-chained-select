@@ -37,7 +37,7 @@ import NoOptions from 'fields/components/no-options';
 
 import SelectField from './SelectField';
 
-export const taxonomytermpicker = ({
+export const chainedselect = ({
 	name,
 	field,
 	items,
@@ -46,7 +46,7 @@ export const taxonomytermpicker = ({
 }) => {
 	let value = field.value;
 	return <Field field={field}>
-		<div className="ntz-taxonomy-term-picker-wrapper">
+		<div className="ntz-chained-select-wrapper">
 		{
 			items.map((item, key) => {
 				item.key = key;
@@ -71,7 +71,7 @@ export const taxonomytermpicker = ({
  *
  * @type {Object}
  */
-taxonomytermpicker.propTypes = {
+chainedselect.propTypes = {
 	name: PropTypes.string,
 	field: PropTypes.shape({
 		id: PropTypes.string,
@@ -88,7 +88,7 @@ taxonomytermpicker.propTypes = {
 	handleChange: PropTypes.func,
 };
 
-taxonomytermpicker.defaultProps = {
+chainedselect.defaultProps = {
 	field:{
 		items: [],
 		value: null
@@ -177,6 +177,6 @@ export const enhance = compose(
 );
 
 export default setStatic('type', [
-	'taxonomytermpicker',
-])(enhance(taxonomytermpicker));
+	'chainedselect',
+])(enhance(chainedselect));
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace iamntz\carbon\taxonomyTermPicker;
+namespace iamntz\carbon\chainedSelect;
 
 class OptionsParser
 {

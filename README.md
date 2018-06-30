@@ -43,7 +43,7 @@ Internally, this will be arranged as needed, so you don't need to worry too much
 For ajax calls, the response must follow the same structure, but must be parsed before is sent:
 
 ```php
-$parser = new \iamntz\carbon\taxonomyTermPicker\OptionsParser([
+$parser = new \iamntz\carbon\chainedSelect\OptionsParser([
   'selectOptions' => $options // same structure as above!
 ], 'fieldName');
 

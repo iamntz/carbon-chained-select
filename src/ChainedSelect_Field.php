@@ -1,13 +1,13 @@
 <?php
 
-namespace iamntz\carbon\taxonomyTermPicker;
+namespace iamntz\carbon\chainedSelect;
 
 use Carbon_Fields\Field\Field;
 use Carbon_Fields\Field\Predefined_Options_Field;
 use Carbon_Fields\Helper\Delimiter;
 use Carbon_Fields\Value_Set\Value_Set;
 
-class TaxonomyTermPicker_Field extends Predefined_Options_Field
+class ChainedSelect_Field extends Predefined_Options_Field
 {
 	protected $valueDelimiter = '|||';
 
@@ -19,10 +19,10 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 
 	public static function admin_enqueue_scripts()
 	{
-		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_TAXONOMY_TERM_PICKER_DIR);
+		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_CHAINED_SELECT_DIR);
 
-		wp_enqueue_script('taxonomy-term-picker', $root_uri . '/assets/js/bundle.js', ['carbon-fields-boot']);
-		wp_enqueue_style('taxonomy-term-picker', $root_uri . '/assets/css/field.css');
+		wp_enqueue_script('carbon-chained-select', $root_uri . '/assets/js/bundle.js', ['carbon-fields-boot']);
+		wp_enqueue_style('carbon-chained-select', $root_uri . '/assets/css/field.css');
 	}
 
 	/**

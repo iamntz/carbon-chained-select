@@ -1,20 +1,20 @@
-.ntz-taxonomy-term-picker-wrapper {
+.ntz-chained-select-wrapper {
   display: flex;
   align-items: center;
   justify-content: space-between;
 }
 
-.ntz-taxonomy-term-picker-wrapper > * {
+.ntz-chained-select-wrapper > * {
   flex: 1 1 100%;
   position:relative;
 }
 
-.ntz-taxonomy-term-picker-wrapper > *:not(:first-child) {
+.ntz-chained-select-wrapper > *:not(:first-child) {
   padding-left: 10px;
 }
 
 
-.ntz-taxonomy-term-picker-delete {
+.ntz-chained-select-delete {
   position: absolute;
   right: 10px;
   top: 50%;
@@ -30,11 +30,11 @@
   text-align: center;
 }
 
-.ntz-taxonomy-term-picker-delete:hover {
+.ntz-chained-select-delete:hover {
   background: #c00;
   color: #fff;
 }
 
-:hover > .ntz-taxonomy-term-picker-delete {
+:hover > .ntz-chained-select-delete {
   display: block;
 }

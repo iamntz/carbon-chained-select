@@ -1,8 +1,8 @@
 {
-    "name": "iamntz/carbon-taxonomy-term-picker",
-    "description": "Provides a taxonomy and/or term picker.",
+    "name": "iamntz/carbon-chained-select",
+    "description": "Provides a chained select field.",
     "keywords": ["wordpress", "carbon-field"],
-    "homepage": "https://github.com/iamntz/carbon-taxonomy-term-picker",
+    "homepage": "https://github.com/iamntz/carbon-chained-select",
     "type": "library",
     "license": "GPL-2.0+",
     "require": {
@@ -13,7 +13,7 @@
             "init.php"
         ],
         "psr-4": {
-            "iamntz\\carbon\\taxonomyTermPicker\\": "src/"
+            "iamntz\\carbon\\chainedSelect\\": "src/"
         }
     }
 }

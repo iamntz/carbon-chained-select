@@ -1,5 +1,5 @@
 {
-  "name": "taxonomy-term-picker",
+  "name": "chained-select",
   "version": "1.0.0",
   "scripts": {
     "dev": "webpack -w",
