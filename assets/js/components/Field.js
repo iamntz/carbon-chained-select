@@ -151,7 +151,7 @@ export const enhance = compose(
 	 */
 	withHandlers({
 		handleChange: ({items, field, setItems, setFieldValue}) => (select, key) => {
-			let value = field.value;
+			let value = field.value || [];
 
 			let newItems = items.slice(0, key + 1);
 
@@ -159,10 +159,14 @@ export const enhance = compose(
 				value = value.slice(0, key);
 			}
 
-			if (select.value) {
-				value[key] = select.value
-			} else if(select[0].value) {
-				value[key] = select.map((o) => o.value );
+			value[key] = false;
+
+			if (select) {
+				if (select.value) {
+					value[key] = select.value
+				} else if(select[0] && select[0].value) {
+					value[key] = select.map((o) => o.value );
+				}
 			}
 
 			setFieldValue(field.id, value);

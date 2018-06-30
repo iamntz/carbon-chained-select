@@ -2,6 +2,8 @@
 
 Provides a chained select control.
 
+![](https://img.iamntz.com/carbon-chained-select-demo.gif)
+
 Adds a `chained-select` field type to Carbon Fields. Install using Composer:
 
 ```cli
