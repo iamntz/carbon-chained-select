@@ -4,7 +4,16 @@
 import React from 'react';
 import PropTypes from 'prop-types';
 import cx from 'classnames';
-import { withHandlers } from 'recompose';
+import {
+  withState,
+  compose,
+  withHandlers,
+  branch,
+  withProps,
+  renderComponent,
+  lifecycle,
+  setStatic
+} from 'recompose';
 
 import {
   cloneDeep,
@@ -13,6 +22,7 @@ import {
   isString,
   sortBy,
   includes,
+  field,
   find
 } from 'lodash';
 
@@ -29,9 +39,13 @@ import 'react-select/dist/react-select.css';
 
 export const SelectField = ({
   item,
+  field,
   name,
   value,
   key,
+  joinValues,
+  delimiter,
+  disabled,
   handleChange,
   getOptions
 }) => {
@@ -50,6 +64,11 @@ export const SelectField = ({
     clearableValue={key}
     onChange={handleChange}
     value={value}
+    field={field}
+    multi={item.config && item.config.multiple}
+    joinValues={joinValues}
+    delimiter={delimiter}
+    disabled={disabled}
     loadOptions={getOptions}/>
 
   return <div>
@@ -70,33 +89,47 @@ SelectField.propTypes = {
   getOptions: PropTypes.func,
 };
 
-const enhance = withHandlers({
-  handleChange: ({item, onChange}) => (select) => {
-    onChange(select, item.key);
-  },
 
-  getOptions: ({item, value, name}) => (searchString, callback) => {
-    console.log('input: ', item);
+const enhance = compose(
+  withState(),
 
-    if (item.config && item.config.endpoint) {
-      return fetch(item.config.endpoint)
-        .then((response) => {
-          return response.json();
-        }).then((json) => {
-          return { options: json.options };
+  withHandlers({
+    handleChange: ({item, onChange}) => (select) => {
+      onChange(select, item.key);
+    },
+
+    getOptions: ({field, item, value, name}) => (query, callback) => {
+      if (item.config && item.config.endpoint) {
+        return fetch(item.config.endpoint, {
+          method: 'POST',
+          headers: {
+            Accept: 'application/json',
+            'Content-Type': 'application/json',
+          },
+          body: JSON.stringify({
+            value: value,
+            fieldValue: field.value,
+            name: name,
+            query: query
+          })
+        })
+          .then((response) => {
+            return response.json();
+          }).then((json) => {
+            return { options: json.options };
+          }).catch((error) => {
+            console.warn(error);
+          });
+      }
+
+      if (item.options.length) {
+        return callback(null, {
+          options: item.options,
+          complete: (item.options.loadMore || false)
         });
+      }
     }
-
-    if (item.options.length) {
-      return callback(null, { options: item.options, complete: true });
-    }
-
-
-    // return item.options;
-
-    // console.log('a', a);
-    // console.log('b', b);
-  }
-});
+  })
+);
 
 export default enhance(SelectField);

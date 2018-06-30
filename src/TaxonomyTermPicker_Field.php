@@ -4,10 +4,13 @@ namespace iamntz\carbon\taxonomyTermPicker;
 
 use Carbon_Fields\Field\Field;
 use Carbon_Fields\Field\Predefined_Options_Field;
+use Carbon_Fields\Helper\Delimiter;
 use Carbon_Fields\Value_Set\Value_Set;
 
 class TaxonomyTermPicker_Field extends Predefined_Options_Field
 {
+	protected $valueDelimiter = '|||';
+
 	public function __construct($type, $name, $label)
 	{
 		$this->set_value_set(new Value_Set(Value_Set::TYPE_MULTIPLE_VALUES));
@@ -47,7 +50,7 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 			$value = [$value];
 		}
 
-		$value = array_values($value);
+		$value = array_values(array_filter($value));
 
 		return $this->set_value($value);
 	}
@@ -74,6 +77,7 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 		$field_data = array_merge($field_data, [
 			'items' => $options,
 			'value' => $this->get_formatted_value(),
+			'valueDelimiter' => $this->valueDelimiter,
 		]);
 
 		return $field_data;
@@ -82,7 +86,6 @@ class TaxonomyTermPicker_Field extends Predefined_Options_Field
 	public function get_formatted_value()
 	{
 		$value = $this->get_value();
-
 		return $value;
 	}
 }

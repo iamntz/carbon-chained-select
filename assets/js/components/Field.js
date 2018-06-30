@@ -19,6 +19,7 @@ import {
 	cloneDeep,
 	without,
 	isMatch,
+	isObject,
 	sortBy,
 	includes,
 	find
@@ -41,17 +42,23 @@ export const taxonomytermpicker = ({
 	field,
 	items,
 	setItems,
-	handleChange,
-	getFieldValue
+	handleChange
 }) => {
 	let value = field.value;
-	console.log('render:', items);
 	return <Field field={field}>
 		<div className="ntz-taxonomy-term-picker-wrapper">
 		{
 			items.map((item, key) => {
 				item.key = key;
-				return <SelectField key={key} config={item.config || {}} item={item} value={value[key] || null} name={`${name}[${key}]`} onChange={handleChange} />
+				return <SelectField key={key} config={item.config || {}}
+					item={item}
+					field={field}
+					value={value[key] || null}
+					name={`${name}[${key}]`}
+					joinValues={field.valueDelimiter.length > 0}
+					delimiter={field.valueDelimiter}
+					disabled={!field.ui.is_visible}
+					onChange={handleChange} />
 			})
 		}
 
@@ -144,22 +151,28 @@ export const enhance = compose(
 	 */
 	withHandlers({
 		handleChange: ({items, field, setItems, setFieldValue}) => (select, key) => {
-			let val = field.value;
+			let value = field.value;
+
 			let newItems = items.slice(0, key + 1);
 
 			if (!select && key) {
-				val = val.slice(0, key);
+				value = value.slice(0, key);
 			}
 
-			field.value[key] = select ? select.value : false;
-			setFieldValue(field.id, val);
+			if (select.value) {
+				value[key] = select.value
+			} else if(select[0].value) {
+				value[key] = select.map((o) => o.value );
+			}
+
+			setFieldValue(field.id, value);
 
 			if (select && select.child) {
 				newItems.push(select.child)
 			}
 
 			setItems(newItems)
-		}
+		},
 	})
 );
 

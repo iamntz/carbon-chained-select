@@ -16,31 +16,23 @@ Any of these keys *can* be changed by using `carbon_chained_select_config` filte
 
 ```php
 ->add_options([
-  '__label__' => 'Select 1',
+  '__label__' => 'Select 1', // field label
 
   'value1' => 'Option Text 1',
   'value2' => 'Option Text 2',
 
   'value3_nested' => [
-    '__label__' => 'Select 2 (nested)',
+    '__label__' => 'Select 2 (nested)', // option text AND next field label
 
-    '__config__' => [
-      'multiple' => true,
-      'endpoint' => '/rest.php',
-    ],
+    'select-2-1-1' => 'Option text 2 - 1',
+    'select-2-1-2' => 'Option text 2 - 2',
 
-    'select-2-1-1' => 'Option text 1 - 1',
-    'select-2-1-2' => 'Option text 1 - 2',
+    "select-2-1-3" => [
+      '__label__' => 'Select 3 (nested, with remote)', // option text and 3rd level field label
 
-    "nested-1" => [
-      '__label__' => 'Another Nested Select',
-      'select-2-2-1' => 'Nested Level 2 - 1',
-      'select-2-2-2' => 'Nested Level 2 - 2',
-
-      [
-        '__label__' => 'Last nested Select',
-        'nested3-2-1' => 'Nested level 2 - 1',
-        'nested3-2-2' => 'Nested level 2 - 2',
+      '__config__' => [
+        'multiple' => true,
+        'endpoint' => '/wp-json/namespace/v2/chained-select',
       ],
     ],
   ],
@@ -59,6 +51,27 @@ $parser->parse();
 ```
 
 Second argument, `fieldName`, is optional and used only for the config filter (i.e. for changing magic keywords).
+
+Speaking of, ajax calls are always sent as POST requests!
+
+## Limitation
+At this moment, you can't have chained & ajax within fields fetched via ajax.
+
+So you chain fields like this:
+
+```
+field > field > ajax > field > field
+```
+
+But you **cant** chain fields like this:
+
+```
+field > field > ajax > field > ajax
+```
+
+Also, you can't have multiple select AND ajax on the same field.
+
+----
 
 #### Special Note on validation
 Carbon's Select fields (both normal and multiselects) uses a validation that will make sure an user won't be able to select an option that doesn't exists in the provided array in config. However, considering that the source can be also external (i.e. via AJAX), this can't be impelemented in a reasonable extensible way.
