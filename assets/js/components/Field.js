@@ -22,6 +22,7 @@ import {
 	isObject,
 	sortBy,
 	includes,
+	uniqueId,
 	find
 } from 'lodash';
 
@@ -44,12 +45,20 @@ export const chainedselect = ({
 	handleChange
 }) => {
 	let value = field.value;
+	 /**
+	  * For some reasons, nested fields are not updated if not cleared first. After some fiddling around,
+	  * key conflicting is the culprit
+	  */
+
 	return <Field field={field}>
 		<div className="ntz-chained-select-wrapper">
 		{
 			items.map((item, key) => {
 				item.key = key;
-				return <SelectField key={key} config={item.config || {}}
+				return <SelectField
+					key={uniqueId(key)}
+					index={key}
+					config={item.config || {}}
 					item={item}
 					field={field}
 					value={value[key] || null}
@@ -179,16 +188,8 @@ export const enhance = compose(
 				newItems.push(select.child)
 			}
 
-			setFieldValue(field.id, value);
-
-			/**
-			 * For some reasons, nested fields are not updated if not cleared first, so we set first an empty
-			 * value, then the right value. This will cause a flicker, but I guess is acceptable?
-			 *
-			 * Most likely I'm not using the right methods to update & render fields.
-			 */
-			setItems([]);
-			window.setTimeout(()=> { setItems(newItems); });
+			setFieldValue(field.id, value)
+		  setItems(newItems);
 		},
 	})
 );

@@ -42,7 +42,7 @@ export const SelectField = ({
   field,
   name,
   value,
-  key,
+  index,
   joinValues,
   delimiter,
   disabled,
@@ -61,7 +61,6 @@ export const SelectField = ({
   }
 
   component = <Async name={name}
-    clearableValue={key}
     onChange={handleChange}
     value={value}
     field={field}
@@ -84,7 +83,6 @@ export const SelectField = ({
  */
 SelectField.propTypes = {
   name: PropTypes.string,
-  key: PropTypes.number,
   handleChange: PropTypes.func,
   getOptions: PropTypes.func,
 };
