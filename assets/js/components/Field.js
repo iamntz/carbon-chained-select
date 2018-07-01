@@ -41,7 +41,6 @@ export const chainedselect = ({
 	name,
 	field,
 	items,
-	setItems,
 	handleChange
 }) => {
 	let value = field.value;
@@ -89,8 +88,8 @@ chainedselect.propTypes = {
 };
 
 chainedselect.defaultProps = {
+	items: [],
 	field:{
-		items: [],
 		value: null
 	}
 }
@@ -118,11 +117,18 @@ export const enhance = compose(
 	lifecycle({
 		componentWillMount() {
 			let initialOptions = this.props.field.items;
-			let items = [];
 			let value = this.props.field.value;
+			let items = [];
 
 			items.push(initialOptions);
 
+			/**
+			 * Parse items recursively in order to be sure we have pre-selected the right values on render
+			 *
+			 * @param      {object}  children  The children
+			 * @param      {number}  nesting   nesting level
+			 * @return     {void}
+			 */
 			let parseOptions = (children, nesting = 0) => {
 				if (!value[nesting]) {
 					return;
@@ -153,8 +159,6 @@ export const enhance = compose(
 		handleChange: ({items, field, setItems, setFieldValue}) => (select, key) => {
 			let value = field.value || [];
 
-			let newItems = items.slice(0, key + 1);
-
 			if (!select && key) {
 				value = value.slice(0, key);
 			}
@@ -169,13 +173,22 @@ export const enhance = compose(
 				}
 			}
 
-			setFieldValue(field.id, value);
+			let newItems = items.slice(0, key + 1);
 
 			if (select && select.child) {
 				newItems.push(select.child)
 			}
 
-			setItems(newItems)
+			setFieldValue(field.id, value);
+
+			/**
+			 * For some reasons, nested fields are not updated if not cleared first, so we set first an empty
+			 * value, then the right value. This will cause a flicker, but I guess is acceptable?
+			 *
+			 * Most likely I'm not using the right methods to update & render fields.
+			 */
+			setItems([]);
+			window.setTimeout(()=> { setItems(newItems); });
 		},
 	})
 );

@@ -59,7 +59,6 @@ class OptionsParser
 				]);
 
 				$option['child'] = $child->parse();
-
 			} else {
 				$option['label'] = strval($value) ?? $key ?? $this->options['defaultLabel'];
 			}
