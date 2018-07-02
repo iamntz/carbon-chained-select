@@ -55,8 +55,8 @@ export const SelectField = ({
   let label = '';
   let component = '';
 
-  if (item.label) {
-    label = <label>{item.label}</label>
+  if (item.config.label) {
+    label = <label>{item.config.label}</label>
   }
 
   component = <Async
@@ -98,13 +98,16 @@ const enhance = compose(
 
     getOptions: ({field, item, value, name}) => (query, callback) => {
       if (item.config.endpoint !== '') {
+        console.log(field);
         return fetch(item.config.endpoint, {
           method: 'POST',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
+
           body: JSON.stringify({
+            nonce: field.nonce,
             value: value,
             fieldValue: field.value,
             name: name,

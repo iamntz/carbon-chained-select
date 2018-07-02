@@ -88,7 +88,6 @@ class OptionsParser
 				$parsed['config']['name'] = $parsed['config']['name'] ?? $option['value'];
 			}
 
-
 			$parsed['options'][] = $option;
 		}
 

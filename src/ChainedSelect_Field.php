@@ -10,6 +10,9 @@ use Carbon_Fields\Value_Set\Value_Set;
 class ChainedSelect_Field extends Predefined_Options_Field
 {
 	protected $valueDelimiter = '|||';
+	protected $nonceName = 'carbon_chained_select';
+
+	protected $selectConfig = [];
 
 	public function __construct($type, $name, $label)
 	{
@@ -87,9 +90,25 @@ class ChainedSelect_Field extends Predefined_Options_Field
 			'items' => $options,
 			'value' => $this->get_value_for_admin(),
 			'valueDelimiter' => $this->valueDelimiter,
+			'nonce' => wp_create_nonce($this->nonceName),
+			'selectConfig' => []
 		]);
 
 		return $field_data;
+	}
+
+	public function set_nonce_name($name)
+	{
+		$this->nonceName = $name;
+
+		return $this;
+	}
+
+	public function set_select_config(array $config)
+	{
+		$this->selectConfig = array_merge($this->selectConfig, $config);
+
+		return $this;
 	}
 
 	protected function get_value_for_admin()

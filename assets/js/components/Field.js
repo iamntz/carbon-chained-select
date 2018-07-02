@@ -74,6 +74,12 @@ chainedselect.propTypes = {
 	name: PropTypes.string,
 	field: PropTypes.shape({
 		id: PropTypes.string,
+		nonce: PropTypes.string,
+		valueDelimiter: PropTypes.string,
+		// TODO: add extra configuration for react-select
+		// e.g. default labels & such.
+		// selectConfig: PropTypes.shape({}),
+
 		value: PropTypes.oneOfType([
 			PropTypes.string,
 			PropTypes.array,
@@ -129,8 +135,6 @@ export const enhance = compose(
 			}
 
 			parseOptions(initialOptions, 0);
-
-			console.log('parsed items: ', items.length, items);
 
 			this.props.setItems(items);
 		}
