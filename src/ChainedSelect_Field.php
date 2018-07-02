@@ -44,15 +44,24 @@ class ChainedSelect_Field extends Predefined_Options_Field
 		// $options_values = $this->get_options_values();
 		// $value = Helper::get_valid_options( $value, $options_values );
 
-		$value = stripslashes_deep($input[$this->get_name()]);
+		$values = stripslashes_deep($input[$this->get_name()]);
 
-		if (!is_array($value)) {
-			$value = [$value];
+		$valueSet = [];
+
+		foreach ($values as $key => $value) {
+			if (strpos($value, $this->valueDelimiter) !== false) {
+				$value = explode($this->valueDelimiter, $value);
+			}
+
+			$valueSet[] = json_encode([
+				'name' => $key,
+				'value' => $value,
+			]);
 		}
 
-		$value = array_values(array_filter($value));
+		$valueSet = array_values(array_filter($valueSet));
 
-		return $this->set_value($value);
+		return $this->set_value($valueSet);
 	}
 
 	protected function xparse_options($config)
@@ -76,11 +85,30 @@ class ChainedSelect_Field extends Predefined_Options_Field
 
 		$field_data = array_merge($field_data, [
 			'items' => $options,
-			'value' => $this->get_value(),
+			'value' => $this->get_value_for_admin(),
 			'valueDelimiter' => $this->valueDelimiter,
 		]);
 
 		return $field_data;
+	}
+
+	protected function get_value_for_admin()
+	{
+		$storedValues = $this->get_value();
+
+		$value = [];
+
+		foreach ($storedValues as $key => $v) {
+			$v = json_decode($v, true);
+
+			if (is_array($v['value'])) {
+				$v['value'] = implode($this->valueDelimiter, $v['value']);
+			}
+
+			$value[] = $v;
+		}
+
+		return $value;
 	}
 
 	public function get_formatted_value()
@@ -92,7 +120,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 				return $v;
 			}
 
-			return Delimiter::split($v, $this->valueDelimiter);;
+			return Delimiter::split($v, $this->valueDelimiter);
 		}, $value);
 
 		return $value;

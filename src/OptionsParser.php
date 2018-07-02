@@ -69,7 +69,7 @@ class OptionsParser
 			}
 
 			$option = [
-				'child' => null,
+				'child' => [],
 				'value' => $this->options['stringifyValue'] ? strval($key) : $key,
 			];
 

@@ -47,22 +47,23 @@ export const chainedselect = ({
 	let value = field.value;
 	 /**
 	  * For some reasons, nested fields are not updated if not cleared first. After some fiddling around,
-	  * key conflicting is the culprit
+	  * key conflicting is the culprit, so we're using unique id for keys
 	  */
-
 	return <Field field={field}>
 		<div className="ntz-chained-select-wrapper">
 		{
-			items.map((item, key) => {
-				item.key = key;
+			items.map((item, index) => {
+				item.index = index;
+				item.name = (item.config && item.config.name) || index;
+
 				return <SelectField
-					key={uniqueId(key)}
-					index={key}
+					key={uniqueId(index)}
+					index={index}
 					config={item.config || {}}
 					item={item}
 					field={field}
-					value={value[key] || null}
-					name={`${name}[${key}]`}
+					value={value[index] && value[index].value || null}
+					name={`${name}[${item.name}]`}
 					joinValues={field.valueDelimiter.length > 0}
 					delimiter={field.valueDelimiter}
 					disabled={!field.ui.is_visible}
@@ -74,11 +75,6 @@ export const chainedselect = ({
 	</Field>;
 }
 
-/**
- * Validate the props.
- *
- * @type {Object}
- */
 chainedselect.propTypes = {
 	name: PropTypes.string,
 	field: PropTypes.shape({
@@ -103,24 +99,11 @@ chainedselect.defaultProps = {
 	}
 }
 
-/**
- * The enhancer.
- *
- * @type {Function}
- */
+
 export const enhance = compose(
-	/**
-	 * Connect to the Redux store.
-	 */
 	withStore(),
-
-	/**
-	 * Attach the setup hooks.
-	 */
 	withSetup(),
-
 	withState('items', 'setItems', []),
-
 	withProps(),
 
 	lifecycle({
@@ -129,66 +112,59 @@ export const enhance = compose(
 			let value = this.props.field.value;
 			let items = [];
 
+			/**
+			 * First select control with the default options
+			 */
 			items.push(initialOptions);
 
 			/**
-			 * Parse items recursively in order to be sure we have pre-selected the right values on render
-			 *
-			 * @param      {object}  children  The children
-			 * @param      {number}  nesting   nesting level
-			 * @return     {void}
+			 * Parse items recursively in order to be sure we have pre-selected the right values on render secondary fields
 			 */
-			let parseOptions = (children, nesting = 0) => {
-				if (!value[nesting]) {
-					return;
-				}
-
+			let parseOptions = (children, deep = 0) => {
 				children.options.map((child, index) => {
-					if(child.value != value[nesting]) {
+					if(child.value != value[deep].value) {
 						return;
 					}
 
-					if (child.child) {
+					if (child.child && child.child.options && child.child.options.length) {
 						items.push(child.child);
-						parseOptions(child.child, (nesting + 1));
+						parseOptions(child.child, (deep + 1));
 					}
 				})
 			}
 
 			parseOptions(initialOptions, 0);
 
+			console.log('parsed items: ', items.length, items);
+
 			this.props.setItems(items);
 		}
 	}),
 
-	/**
-	 * The handlers passed to the component.
-	 */
 	withHandlers({
-		handleChange: ({items, field, setItems, setFieldValue}) => (select, key) => {
-			let value = field.value || [];
+		handleChange: ({items, field, setItems, setFieldValue}) => (select, item) => {
+			let value =  [];
 
-			if (!select && key) {
-				value = value.slice(0, key);
-			}
-
-			value[key] = false;
+			console.log('=========================');
+			console.log('value', field.value);
+			console.log('select', select);
+			console.log('items', items);
+			console.log('item', item);
+			console.log('=========================');
 
 			if (select) {
-				if (select.value) {
-					value[key] = select.value
-				} else if(select[0] && select[0].value) {
-					value[key] = select.map((o) => o.value );
-				}
+				// value = value.slice(0, item.index);
 			}
 
-			let newItems = items.slice(0, key + 1);
+			let newVal = {};
+			newVal[item.name] = select.value
 
-			if (select && select.child) {
-				newItems.push(select.child)
-			}
+			value.push(newVal);
 
-			setFieldValue(field.id, value)
+
+			setFieldValue(field.id, value);
+
+			let newItems = items.slice(0, value.length);
 		  setItems(newItems);
 		},
 	})

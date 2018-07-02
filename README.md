@@ -58,7 +58,6 @@ Alternatively, you can move all config-related within `__config__` array:
     'select-2-1-2' => 'Option text 2 - 2',
 
     "select-2-1-3" => [
-
       '__config__' => [
         /**
          * By default, each nested item will be in an array that will look pretty much like this:
@@ -73,12 +72,18 @@ Alternatively, you can move all config-related within `__config__` array:
          *  'last-level-name' => 'select-2-1-3'
          * ]
          *
-         * If no `name` config key is provided, then the value name will be used.
+         * If no `name` config key is provided, then the value name will be used. For consistency sake,
+         * try to use one way or another, don't mix them. Also, please note that by NOT specifying a name,
+         * you're stuck with the initial order. I.e. won't be able to reorder items without breaking existing data!
          */
         'name' => 'last-level-name',
 
         // if you have a `label` key here, then the `__label__` key on an upper level will be ignored.
         'label' => 'Select 3 (nested, with remote)',
+
+        // optional, is the label that will appear above `select` field. If not specified,
+        // then the label above will be used as both option AND label
+        'option_label' => '',
 
         // wether if the field can have multiple values or only one.
         // Please note that if a field is multiple, you can't have any further nested selects

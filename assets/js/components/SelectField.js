@@ -42,7 +42,6 @@ export const SelectField = ({
   field,
   name,
   value,
-  index,
   joinValues,
   delimiter,
   disabled,
@@ -60,7 +59,8 @@ export const SelectField = ({
     label = <label>{item.label}</label>
   }
 
-  component = <Async name={name}
+  component = <Async
+    name={name}
     onChange={handleChange}
     value={value}
     field={field}
@@ -68,7 +68,7 @@ export const SelectField = ({
     joinValues={joinValues}
     delimiter={delimiter}
     disabled={disabled}
-    loadOptions={getOptions}/>
+    loadOptions={getOptions} />
 
   return <div>
     {label}
@@ -93,11 +93,11 @@ const enhance = compose(
 
   withHandlers({
     handleChange: ({item, onChange}) => (select) => {
-      onChange(select, item.key);
+      onChange(select, item);
     },
 
     getOptions: ({field, item, value, name}) => (query, callback) => {
-      if (item.config && item.config.endpoint) {
+      if (item.config.endpoint !== '') {
         return fetch(item.config.endpoint, {
           method: 'POST',
           headers: {
