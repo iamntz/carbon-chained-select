@@ -157,19 +157,24 @@ export const enhance = compose(
 			console.log('=========================');
 
 			if (select) {
-				value = value.slice(0, item.index + 1);
+				value = field.value.slice(0, item.index + 1);
 			}
 
 			if (select && select.value ) {
-				let newVal = {};
-				newVal.value = select.value
-				newVal.name = item.name
-				value[item.index] = newVal;
+				value[item.index] = {
+					value: select.value,
+					name: item.name
+				};
 			}
 
 			setFieldValue(field.id, value);
 
-			let newItems = items.slice(0, value.length);
+			let newItems = items.slice(0, (value.length + 1 || 1 ));
+
+			if (select && select.child && select.child.options && select.child.options.length) {
+			  newItems.push(select.child);
+			}
+
 		  setItems(newItems);
 		},
 	})
