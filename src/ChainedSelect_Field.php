@@ -86,18 +86,27 @@ class ChainedSelect_Field extends Predefined_Options_Field
 		$options = $this->get_options();
 		$options = $this->xparse_options(['selectOptions' => $options], true);
 
+		$this->selectConfig = [
+			'placeholder' => __('Select...'),
+			'clearAllText' => __('Clear all'),
+			'clearValueText' => __('Clear value'),
+			'noResultsText' => __('No results found'),
+			'searchPromptText' => __('Type to search'),
+			'loadingPlaceholder' => __('Loading...')
+		];
+
 		$field_data = array_merge($field_data, [
 			'items' => $options,
 			'value' => $this->get_value_for_admin(),
 			'valueDelimiter' => $this->valueDelimiter,
 			'nonce' => wp_create_nonce($this->nonceName),
-			'selectConfig' => []
+			'selectConfig' => $this->selectConfig,
 		]);
 
 		return $field_data;
 	}
 
-	public function set_nonce_name($name)
+	public function set_nonce_name(string $name)
 	{
 		$this->nonceName = $name;
 
@@ -107,6 +116,21 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	public function set_select_config(array $config)
 	{
 		$this->selectConfig = array_merge($this->selectConfig, $config);
+
+		return $this;
+	}
+
+	/**
+	 * Sets the value delimiter used to store multiple options in DB. This should **NOT** be changed
+	 * in production, otherwise data loss can occur.
+	 *
+	 * @param      string  $valueDelimiter  The value delimiter
+	 *
+	 * @return     self
+	 */
+	public function set_value_delimiter(string $valueDelimiter)
+	{
+		$this->valueDelimiter = $valueDelimiter;
 
 		return $this;
 	}

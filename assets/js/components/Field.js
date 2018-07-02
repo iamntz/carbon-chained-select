@@ -78,7 +78,13 @@ chainedselect.propTypes = {
 		valueDelimiter: PropTypes.string,
 		// TODO: add extra configuration for react-select
 		// e.g. default labels & such.
-		// selectConfig: PropTypes.shape({}),
+		selectConfig: PropTypes.shape({
+			placeholder:PropTypes.string,
+			clearAllText:PropTypes.string,
+			clearValueText:PropTypes.string,
+			noResultsText:PropTypes.string,
+			searchPromptText:PropTypes.string,
+		}),
 
 		value: PropTypes.oneOfType([
 			PropTypes.string,

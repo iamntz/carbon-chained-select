@@ -65,10 +65,12 @@ export const SelectField = ({
     value={value}
     field={field}
     multi={item.config && item.config.multiple}
+    closeOnSelect={!(item.config && item.config.multiple)}
     joinValues={joinValues}
     delimiter={delimiter}
     disabled={disabled}
-    loadOptions={getOptions} />
+    loadOptions={getOptions}
+    {...field.selectConfig} />
 
   return <div>
     {label}
