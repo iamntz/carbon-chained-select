@@ -45,6 +45,10 @@ export const chainedselect = ({
 	handleChange
 }) => {
 	let value = field.value;
+
+	console.log('=========== items ===========');
+	console.log(items);
+	console.log('value', value);
 	 /**
 	  * For some reasons, nested fields are not updated if not cleared first. After some fiddling around,
 	  * key conflicting is the culprit, so we're using unique id for keys
@@ -153,14 +157,15 @@ export const enhance = compose(
 			console.log('=========================');
 
 			if (select) {
-				// value = value.slice(0, item.index);
+				value = value.slice(0, item.index + 1);
 			}
 
-			let newVal = {};
-			newVal[item.name] = select.value
-
-			value.push(newVal);
-
+			if (select && select.value ) {
+				let newVal = {};
+				newVal.value = select.value
+				newVal.name = item.name
+				value[item.index] = newVal;
+			}
 
 			setFieldValue(field.id, value);
 
