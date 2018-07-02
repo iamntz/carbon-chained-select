@@ -40,6 +40,70 @@ Any of these keys *can* be changed by using `carbon_chained_select_config` filte
   ],
 ]);
 ```
+
+Alternatively, you can move all config-related within `__config__` array:
+```php
+->add_options([
+  '__config__' => [
+    'label' => 'Select 1', // field label
+  ]
+
+  'value1' => 'Option Text 1',
+  'value2' => 'Option Text 2',
+
+  'value3_nested' => [
+    '__label__' => 'Select 2 (nested)', // option text AND next field label
+
+    'select-2-1-1' => 'Option text 2 - 1',
+    'select-2-1-2' => 'Option text 2 - 2',
+
+    "select-2-1-3" => [
+
+      '__config__' => [
+        /**
+         * By default, each nested item will be in an array that will look pretty much like this:
+         * [
+         *    'value3_nested' => value3_nested',
+         *    'select-2-1-3' => select-2-1-3'
+         * ]
+         *
+         * You can specify a name for each level, so you could have a multi-dimensional array, something like this:
+         * [
+         *  'value3_nested' => 'value3_nested',
+         *  'last-level-name' => 'select-2-1-3'
+         * ]
+         *
+         * If no `name` config key is provided, then the value name will be used.
+         */
+        'name' => 'last-level-name',
+
+        // if you have a `label` key here, then the `__label__` key on an upper level will be ignored.
+        'label' => 'Select 3 (nested, with remote)',
+
+        // wether if the field can have multiple values or only one.
+        // Please note that if a field is multiple, you can't have any further nested selects
+        // you can try though, but the results are not predictible :)
+        'multiple' => true,
+
+        // REST endpoint to fetch new options. This should accept POST requests!
+        // Params sent on the request:
+        // {
+        //    nonce: nonce, // checking for carbon_chained_select key
+        //    value: value, // current select value
+        //    fieldValue: field.value, // whole field value (as an array)
+        //    name: name, // the field name
+        //    query: query // if user searched something, it will be sent as this key
+        // }
+        //
+        // The response should follow the same structure as this initial array,
+        // parsed (read below) then sent as json
+        'endpoint' => '/wp-json/namespace/v2/chained-select',
+      ],
+    ],
+  ],
+]);
+```
+
 Internally, this will be arranged as needed, so you don't need to worry too much about it.
 
 For ajax calls, the response must follow the same structure, but must be parsed before is sent:
@@ -79,3 +143,11 @@ Also, you can't have multiple select AND ajax on the same field.
 Carbon's Select fields (both normal and multiselects) uses a validation that will make sure an user won't be able to select an option that doesn't exists in the provided array in config. However, considering that the source can be also external (i.e. via AJAX), this can't be impelemented in a reasonable extensible way.
 
 Most likely this won't affect anything, but **if** sometime in the future Carbon can be used on the frontend, this _may_ be a gateway of abuses.
+
+
+### Support
+You can get [hosting](https://m.do.co/c/c95a44d0e992), [donate](https://www.paypal.me/iamntz) or buy me a [gift](http://iamntz.com/wishlist).
+
+
+### License
+The code is released under MIT license.
