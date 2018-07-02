@@ -1,6 +1,3 @@
-/**
- * The external dependencies.
- */
 import React from 'react';
 import PropTypes from 'prop-types';
 
@@ -20,20 +17,17 @@ import {
 	without,
 	isMatch,
 	isObject,
+	isArray,
 	sortBy,
 	includes,
 	uniqueId,
 	find
 } from 'lodash';
 
-/**
- * The internal dependencies.
- */
+
 import Field from 'fields/components/field';
 import withStore from 'fields/decorators/with-store';
 import withSetup from 'fields/decorators/with-setup';
-
-
 import NoOptions from 'fields/components/no-options';
 
 import SelectField from './SelectField';
@@ -46,12 +40,9 @@ export const chainedselect = ({
 }) => {
 	let value = field.value;
 
-	console.log('=========== items ===========');
-	console.log(items);
-	console.log('value', value);
 	 /**
 	  * For some reasons, nested fields are not updated if not cleared first. After some fiddling around,
-	  * key conflicting is the culprit, so we're using unique id for keys
+	  * key conflicting is the culprit, so we're using unique id for keys. I have no idea if this is the right aproach...
 	  */
 	return <Field field={field}>
 		<div className="ntz-chained-select-wrapper">
@@ -149,27 +140,25 @@ export const enhance = compose(
 		handleChange: ({items, field, setItems, setFieldValue}) => (select, item) => {
 			let value =  [];
 
-			console.log('=========================');
-			console.log('value', field.value);
-			console.log('select', select);
-			console.log('items', items);
-			console.log('item', item);
-			console.log('=========================');
-
 			if (select) {
 				value = field.value.slice(0, item.index + 1);
-			}
 
-			if (select && select.value ) {
-				value[item.index] = {
-					value: select.value,
-					name: item.name
-				};
+				if (select.value) {
+					value[item.index] = {
+						value: select.value,
+						name: item.name
+					};
+				} else if(isArray(select)) { // is multiple="true" ?
+					value[item.index] = {
+						value: select.map((o) => o.value),
+						name: item.name
+					};
+				}
 			}
 
 			setFieldValue(field.id, value);
 
-			let newItems = items.slice(0, (value.length + 1 || 1 ));
+			let newItems = items.slice(0, (value.length > 1 ? value.length + 1 : 1));
 
 			if (select && select.child && select.child.options && select.child.options.length) {
 			  newItems.push(select.child);

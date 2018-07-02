@@ -92,6 +92,8 @@ class OptionsParser
 			$parsed['options'][] = $option;
 		}
 
+		$parsed['config']['multiple'] = boolval($parsed['config']['multiple']);
+
 		return $parsed;
 	}
 
