@@ -119,6 +119,10 @@ export const enhance = compose(
 			let value = this.props.field.value;
 			let items = [];
 
+			if (!value.length) {
+				return;
+			}
+
 			/**
 			 * First select control with the default options
 			 */
@@ -129,7 +133,7 @@ export const enhance = compose(
 			 */
 			let parseOptions = (children, deep = 0) => {
 				children.options.map((child, index) => {
-					if(child.value != value[deep].value) {
+					if(!child || !child.value || !value[deep] || child.value != value[deep].value) {
 						return;
 					}
 
