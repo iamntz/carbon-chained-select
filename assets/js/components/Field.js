@@ -133,7 +133,7 @@ export const enhance = compose(
 						return;
 					}
 
-					if (child.child && child.child.options && child.child.options.length) {
+					if (child.child && child.child.options) {
 						items.push(child.child);
 						parseOptions(child.child, (deep + 1));
 					}
@@ -148,7 +148,7 @@ export const enhance = compose(
 
 	withHandlers({
 		handleChange: ({items, field, setItems, setFieldValue}) => (select, item) => {
-			let value = field.value.slice(0, item.index + 1);
+			let value = field.value.slice(0, item.index);
 
 			if (select) {
 				if (select.value) {
@@ -166,9 +166,9 @@ export const enhance = compose(
 
 			setFieldValue(field.id, value);
 
-			let newItems = items.slice(0, (value.length > 1 ? value.length : 1));
+			let newItems = items.slice(0, Math.max(value.length, 1));
 
-			if (select && select.child && select.child.options && select.child.options.length) {
+			if (select && select.child && select.child.options) {
 			  newItems.push(select.child);
 			}
 

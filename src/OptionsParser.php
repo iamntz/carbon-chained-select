@@ -88,10 +88,18 @@ class OptionsParser
 				$parsed['config']['name'] = $parsed['config']['name'] ?? $option['value'];
 			}
 
+
+			if ($option['child']['config']['endpoint'] ?? false) {
+				/**
+				 * We need to be sure that, if a field can fetch items remotely, have at least one child, otherwise won't be displayed
+				 */
+				$option['child']['options'][] = [];
+			}
 			$parsed['options'][] = $option;
 		}
 
 		$parsed['config']['multiple'] = boolval($parsed['config']['multiple']);
+
 
 		return $parsed;
 	}

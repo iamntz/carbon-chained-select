@@ -100,7 +100,6 @@ const enhance = compose(
 
     getOptions: ({field, item, value, name}) => (query, callback) => {
       if (item.config.endpoint !== '') {
-        console.log(field);
         return fetch(item.config.endpoint, {
           method: 'POST',
           headers: {
