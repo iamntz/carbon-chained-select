@@ -43,9 +43,9 @@ class ChainedSelect_Field extends Predefined_Options_Field
 		 * In carbon fields, select fields have a validator, that make sure that you can't have values that are not
 		 * provided in the settings. However, considering that we may also have AJAX provided values, we can't make
 		 * this kind of validation.
+		 * $options_values = $this->get_options_values();
+		 * $value = Helper::get_valid_options( $value, $options_values );
 		 */
-		// $options_values = $this->get_options_values();
-		// $value = Helper::get_valid_options( $value, $options_values );
 
 		$values = stripslashes_deep($input[$this->get_name()]);
 
@@ -92,7 +92,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 			'clearValueText' => __('Clear value'),
 			'noResultsText' => __('No results found'),
 			'searchPromptText' => __('Type to search'),
-			'loadingPlaceholder' => __('Loading...')
+			'loadingPlaceholder' => __('Loading...'),
 		];
 
 		$field_data = array_merge($field_data, [
