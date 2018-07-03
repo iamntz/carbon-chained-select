@@ -75,6 +75,8 @@ Alternatively, you can move all config-related within `__config__` array:
          * If no `name` config key is provided, then the value name will be used. For consistency sake,
          * try to use one way or another, don't mix them. Also, please note that by NOT specifying a name,
          * you're stuck with the initial order. I.e. won't be able to reorder items without breaking existing data!
+         *
+         * So TL;DR: use a damn name!
          */
         'name' => 'last-level-name',
 
@@ -142,6 +144,9 @@ field > field > ajax > field > ajax
 
 Also, you can't have multiple select AND ajax on the same field.
 
+## Return values
+Value returned is an associative array that follows the field names.
+
 ----
 
 #### Special Note on validation
@@ -150,7 +155,7 @@ Carbon's Select fields (both normal and multiselects) uses a validation that wil
 Most likely this won't affect anything, but **if** sometime in the future Carbon can be used on the frontend, this _may_ be a gateway of abuses.
 
 
-### Support
+### Support me
 You can get [hosting](https://m.do.co/c/c95a44d0e992), [donate](https://www.paypal.me/iamntz) or buy me a [gift](http://iamntz.com/wishlist).
 
 

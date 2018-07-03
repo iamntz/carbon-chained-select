@@ -156,15 +156,13 @@ class ChainedSelect_Field extends Predefined_Options_Field
 
 	public function get_formatted_value()
 	{
-		$value = $this->get_value();
+		$storedValues = $this->get_value();
+		$value = [];
 
-		$value = array_map(function ($v) {
-			if (strpos($v, $this->valueDelimiter) === false) {
-				return $v;
-			}
-
-			return Delimiter::split($v, $this->valueDelimiter);
-		}, $value);
+		foreach ($storedValues as $key => $storedValue) {
+			$decoded = json_decode($storedValue, true);
+			$value[$decoded['name']] = $decoded['value'];
+		}
 
 		return $value;
 	}
