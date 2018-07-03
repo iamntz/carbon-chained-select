@@ -7,12 +7,20 @@
 .ntz-chained-select-wrapper > * {
   flex: 1 1 100%;
   position:relative;
+  margin-bottom: 1em;
 }
 
-.ntz-chained-select-wrapper > *:not(:first-child) {
-  padding-left: 10px;
+@media all and (max-width: 1199px) {
+  .ntz-chained-select-wrapper {
+    flex-wrap: wrap;
+  }
 }
 
+@media all and (min-width: 1200px) {
+  .ntz-chained-select-wrapper > *:not(:first-child) {
+    padding-left: 10px;
+  }
+}
 
 .ntz-chained-select-delete {
   position: absolute;
