@@ -28,6 +28,12 @@ class ChainedSelect_Field extends Predefined_Options_Field
 		wp_enqueue_style('carbon-chained-select', $root_uri . '/assets/css/field.css');
 	}
 
+	public function set_default_value($default_value)
+	{
+		throw new \Exception("Not supported (yet...?)", 1);
+		return $this;
+	}
+
 	/**
 	 * Load the field value from an input array based on its name
 	 *
