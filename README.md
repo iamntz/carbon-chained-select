@@ -149,6 +149,15 @@ Value returned is an associative array that follows the field names.
 
 ----
 
+## Known issues:
+
+- [ ] You can't have another nested field after an ajax select. This _might_ work but I didn't tested.
+- [ ] You can't have another nested field after a select with multiple options. This one has a very very **VERY** low priority (mostly because the way I see it, is a UX nightmare) on my list.
+- [ ] Conditional logic is broken on this field. This is caused by the way I store data in the DB (as a json string). Although I would like to make this work, I have to find some time to dig into Carbon Field conditional and understand its logic.
+- [ ] Didn't tested, but setting a field as required should have the very same issue as the conditional logic above.
+
+If you have any fixes, please send a PR!
+
 #### Special Note on validation
 Carbon's Select fields (both normal and multiselects) uses a validation that will make sure an user won't be able to select an option that doesn't exists in the provided array in config. However, considering that the source can be also external (i.e. via AJAX), this can't be impelemented in a reasonable extensible way.
 
