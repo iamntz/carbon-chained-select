@@ -154,7 +154,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 				$v['value'] = implode($this->valueDelimiter, $v['value']);
 			}
 
-			$value[] = $v;
+			$value[][$v['name']] = $v['value'];
 		}
 
 		return $value;

@@ -57,7 +57,7 @@ export const chainedselect = ({
 					config={item.config || {}}
 					item={item}
 					field={field}
-					value={value[index] && value[index].value || null}
+					value={value[index] && value[index][item.name] || null}
 					name={`${name}[${item.name}]`}
 					joinValues={field.valueDelimiter.length > 0}
 					delimiter={field.valueDelimiter}
@@ -133,7 +133,9 @@ export const enhance = compose(
 			 */
 			let parseOptions = (children, deep = 0) => {
 				children.options.map((child, index) => {
-					if(!child || !child.value || !value[deep] || child.value != value[deep].value) {
+					let deepValue = value[deep][Object.keys(value[deep])[0]] || null
+
+					if(!child || !child.value || !value[deep] || child.value != deepValue) {
 						return;
 					}
 
@@ -155,17 +157,15 @@ export const enhance = compose(
 			let value = field.value.slice(0, item.index);
 
 			if (select) {
+				let data;
 				if (select.value) {
-					value[item.index] = {
-						value: select.value,
-						name: item.name
-					};
+					data = select.value;
 				} else if(isArray(select)) { // is multiple="true" ?
-					value[item.index] = {
-						value: select.map((o) => o.value),
-						name: item.name
-					};
+					data = select.map((o) => o.value);
 				}
+
+				value[item.index] = {};
+				value[item.index][item.name] = data
 			}
 
 			setFieldValue(field.id, value);
