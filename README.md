@@ -92,7 +92,7 @@ Alternatively, you can move all config-related within `__config__` array:
         // you can try though, but the results are not predictible :)
         'multiple' => true,
 
-        // REST endpoint to fetch new options. This should accept POST requests!
+        // REST endpoint to fetch new options. This should accept GET requests!
         // Params sent on the request:
         // {
         //    nonce: nonce, // checking for carbon_chained_select key
@@ -124,8 +124,6 @@ $parser->parse();
 ```
 
 Second argument, `fieldName`, is optional and used only for the config filter (i.e. for changing magic keywords).
-
-Speaking of, ajax calls are always sent as POST requests!
 
 ## Limitation
 At this moment, you can't have chained & ajax within fields fetched via ajax.

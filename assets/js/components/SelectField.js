@@ -100,20 +100,24 @@ const enhance = compose(
 
     getOptions: ({field, item, value, name}) => (query, callback) => {
       if (item.config.endpoint !== '') {
-        return fetch(item.config.endpoint, {
-          method: 'POST',
+        let params = jQuery.param({
+          nonce: field.nonce,
+          value: value,
+          fieldValue: field.value,
+          name: name,
+          query: query
+        });
+
+        let restEndpoint = item.config.endpoint;
+        restEndpoint += restEndpoint.indexOf('?') === -1 ? '?' : '&';
+        restEndpoint += params;
+
+        return fetch(restEndpoint, {
+          method: 'GET',
           headers: {
             Accept: 'application/json',
             'Content-Type': 'application/json',
           },
-
-          body: JSON.stringify({
-            nonce: field.nonce,
-            value: value,
-            fieldValue: field.value,
-            name: name,
-            query: query
-          })
         })
           .then((response) => {
             return response.json();
