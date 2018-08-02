@@ -7,7 +7,7 @@
     "license": "GPL-2.0+",
     "require": {
         "php": ">=7.0.0",
-        "htmlburger/carbon-fields": "^2.0"
+        "htmlburger/carbon-fields": "*"
     },
     "autoload": {
         "files": [
