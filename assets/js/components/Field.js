@@ -54,7 +54,6 @@ export const chainedselect = ({
 				return <SelectField
 					key={uniqueId(index)}
 					index={index}
-					config={item.config || {}}
 					item={item}
 					field={field}
 					value={value[index] && value[index][item.name] || null}
