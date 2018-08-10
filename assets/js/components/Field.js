@@ -132,6 +132,10 @@ export const enhance = compose(
 			 */
 			let parseOptions = (children, deep = 0) => {
 				children.options.map((child, index) => {
+					if (!value[deep]) {
+						return;
+					}
+
 					let deepValue = value[deep][Object.keys(value[deep])[0]] || null
 
 					if(!child || !child.value || !value[deep] || child.value != deepValue) {
