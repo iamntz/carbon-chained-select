@@ -10,6 +10,8 @@ Adds a `chained-select` field type to Carbon Fields. Install using Composer:
 composer require iamntz/carbon-chained-select
 ```
 
+N.B.: **Works only with Carbon Fields 2!**
+
 ## `add_option` array structure
 
 Basically this is a multidimensional array with few _magic_ keywords. These keywords are: `__label__`, `__config__`.
