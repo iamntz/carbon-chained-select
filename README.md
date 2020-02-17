@@ -7,8 +7,15 @@ Provides a chained select control.
 Adds a `chained-select` field type to Carbon Fields. Install using Composer:
 
 ```cli
-composer require iamntz/carbon-chained-select
+composer require "iamntz/carbon-chained-select:^3.0"
 ```
+
+For Carbon Fields 2 (legacy):
+
+```cli
+composer require "iamntz/carbon-chained-select:^2.0"
+```
+
 
 ## `add_option` array structure
 
@@ -157,14 +164,13 @@ Value returned is an associative array that follows the field names.
 If you have any fixes, please send a PR!
 
 #### Special Note on validation
-Carbon's Select fields (both normal and multiselects) uses a validation that will make sure an user won't be able to select an option that doesn't exists in the provided array in config. However, considering that the source can be also external (i.e. via AJAX), this can't be impelemented in a reasonable extensible way.
+Carbon's Select fields (both normal and multiselect) uses a validation that will make sure an user won't be able to select an option that doesn't exists in the provided array in config. However, considering that the source can be also external (i.e. via AJAX), this can't be implemented in a reasonable extensible way.
 
 Most likely this won't affect anything, but **if** sometime in the future Carbon can be used on the frontend, this _may_ be a gateway of abuses.
 
 
 ### Support me
-You can get [hosting](https://m.do.co/c/c95a44d0e992), 
-[donate](https://www.paypal.me/iamntz) or be my [patreon](https://www.patreon.com/iamntz).
+You can get [hosting](https://m.do.co/c/c95a44d0e992), [donate](https://www.paypal.me/iamntz) or be my [patreon](https://www.patreon.com/iamntz).
 
 
 ### License
