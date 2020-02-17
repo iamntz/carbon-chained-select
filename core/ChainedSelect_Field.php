@@ -1,6 +1,6 @@
 <?php
 
-namespace iamntz\carbon\chainedSelect;
+namespace iamntz\carbonfields\chainedSelect;
 
 use Carbon_Fields\Field\Field;
 use Carbon_Fields\Field\Predefined_Options_Field;
@@ -24,8 +24,10 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	{
 		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_CHAINED_SELECT_DIR);
 
-		wp_enqueue_script('carbon-chained-select', $root_uri . '/assets/js/bundle.js', ['carbon-fields-boot']);
-		wp_enqueue_style('carbon-chained-select', $root_uri . '/assets/css/field.css');
+		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min' ;
+
+		wp_enqueue_script('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.js", ['carbon-fields-core']);
+		wp_enqueue_style('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.css");
 	}
 
 	public function set_default_value($default_value)
@@ -76,6 +78,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	protected function xparse_options($config)
 	{
 		$parser = new OptionsParser($config, $this->get_base_name());
+
 		return $parser->parse();
 	}
 
@@ -108,6 +111,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 			'nonce' => wp_create_nonce($this->nonceName),
 			'selectConfig' => $this->selectConfig,
 		]);
+
 
 		return $field_data;
 	}

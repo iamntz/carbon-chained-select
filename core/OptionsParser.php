@@ -1,6 +1,6 @@
 <?php
 
-namespace iamntz\carbon\chainedSelect;
+namespace iamntz\carbonfields\chainedSelect;
 
 class OptionsParser
 {
@@ -100,6 +100,7 @@ class OptionsParser
 
 		$parsed['config']['multiple'] = boolval($parsed['config']['multiple']);
 
+		$parsed['config']['_id'] = uniqid(sha1(serialize($parsed['config'])));
 
 		return $parsed;
 	}

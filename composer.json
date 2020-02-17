@@ -1,19 +1,24 @@
 {
     "name": "iamntz/carbon-chained-select",
     "description": "Provides a chained select for Carbon Fields.",
-    "keywords": ["wordpress", "carbon-field", "carbon-field-plugin"],
+    "keywords": [
+        "wordpress",
+        "carbon-field",
+        "carbon-field-plugin"
+    ],
     "homepage": "https://github.com/iamntz/carbon-chained-select",
     "type": "library",
-    "license": "GPL-2.0+",
+    "license": "MIT",
     "require": {
-        "php": ">=7.0.0"
+        "php": ">=7.0.0",
+        "ext-json": "*"
     },
     "autoload": {
         "files": [
             "init.php"
         ],
         "psr-4": {
-            "iamntz\\carbon\\chainedSelect\\": "src/"
+            "iamntz\\carbonfields\\chainedSelect\\": "core"
         }
     }
 }
