@@ -24,7 +24,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	{
 		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_CHAINED_SELECT_DIR);
 
-		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : 'min' ;
+		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ;
 
 		wp_enqueue_script('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.js", ['carbon-fields-core']);
 		wp_enqueue_style('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.css");
