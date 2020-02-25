@@ -1,10 +1,10 @@
-# Carbon Field: chained-select
+# Carbon Field: chainedselect
 
 Provides a chained select control.
 
 ![](https://img.iamntz.com/carbon-chained-select-demo.gif)
 
-Adds a `chained-select` field type to Carbon Fields. Install using Composer:
+Adds a `chainedselect` field type to Carbon Fields. Install using Composer:
 
 ```cli
 composer require "iamntz/carbon-chained-select:^3.0"
