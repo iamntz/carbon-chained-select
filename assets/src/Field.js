@@ -103,11 +103,8 @@ class Field extends Component {
 			data = select.map((o) => o.value);
 		}
 
-		console.log(event);
 		value[index] = {};
 		value[index][event.name] = data;
-
-		console.log(value);
 
 		onChange(id, value);
 	}

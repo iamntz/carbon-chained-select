@@ -3,9 +3,9 @@
 namespace iamntz\carbonfields\chainedSelect;
 
 use Carbon_Fields\Field\Field;
-use Carbon_Fields\Field\Predefined_Options_Field;
 use Carbon_Fields\Helper\Delimiter;
 use Carbon_Fields\Value_Set\Value_Set;
+use Carbon_Fields\Field\Predefined_Options_Field;
 
 class ChainedSelect_Field extends Predefined_Options_Field
 {
@@ -24,10 +24,10 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	{
 		$root_uri = \Carbon_Fields\Carbon_Fields::directory_to_url(CARBON_CHAINED_SELECT_DIR);
 
-		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min' ;
+		$suffix = defined('SCRIPT_DEBUG') && SCRIPT_DEBUG ? '' : '.min';
 
-		wp_enqueue_script('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.js", ['carbon-fields-core']);
-		wp_enqueue_style('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.css");
+		wp_enqueue_script('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.js", ['carbon-fields-core'], CARBON_CHAINED_SELECT_VERSION, true);
+		wp_enqueue_style('carbon-chained-select', $root_uri . "/assets/dist/bundle{$suffix}.css", [], CARBON_CHAINED_SELECT_VERSION);
 	}
 
 	public function set_default_value($default_value)
@@ -85,7 +85,8 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	/**
 	 * Returns an array that holds the field data, suitable for JSON representation.
 	 *
-	 * @param bool $load  Should the value be loaded from the database or use the value from the current instance.
+	 * @param bool $load Should the value be loaded from the database or use the value from the current instance.
+	 *
 	 * @return array
 	 */
 	public function to_json($load)
@@ -134,7 +135,7 @@ class ChainedSelect_Field extends Predefined_Options_Field
 	 * Sets the value delimiter used to store multiple options in DB. This should **NOT** be changed
 	 * in production, otherwise data loss can occur.
 	 *
-	 * @param      string  $valueDelimiter  The value delimiter
+	 * @param string $valueDelimiter The value delimiter
 	 *
 	 * @return     self
 	 */

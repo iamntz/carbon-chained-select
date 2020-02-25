@@ -1,9 +1,10 @@
 {
   "name": "iamntz-carbon-uniqid",
-  "version": "3.0.0",
+  "version": "3.0.3",
   "scripts": {
     "start": "npm run development -- --watch",
-    "build": "npm run development && npm run production",
+    "version": "cross-var rexreplace \"(_VERSION', )(.*);\" \"$1'$npm_package_version');\" init.php",
+    "build": "npm run version && npm run development && npm run production",
     "development": "cross-env NODE_ENV=development webpack --mode development",
     "production": "cross-env NODE_ENV=production webpack --mode production"
   },
@@ -22,12 +23,14 @@
     "babel-loader": "^8.0.2",
     "babel-plugin-module-resolver": "^3.1.1",
     "cross-env": "^5.2.0",
+    "cross-var": "^1.1.0",
     "css-loader": "^1.0.0",
     "mini-css-extract-plugin": "^0.4.4",
     "node-sass": "^4.9.4",
     "optimize-css-assets-webpack-plugin": "^5.0.1",
     "postcss-loader": "^3.0.0",
     "postcss-preset-env": "^6.2.0",
+    "rexreplace": "^5.2.0",
     "sass-loader": "^7.1.0",
     "sass-resources-loader": "^2.0.0",
     "terser-webpack-plugin": "^1.1.0",

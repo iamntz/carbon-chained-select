@@ -31,6 +31,10 @@ class SelectField extends Component {
 	}
 
 	getSelectedValue() {
+		if (!this.state.selectOptions || this.state.selectOptions.length) {
+			return [];
+		}
+
 		return this.state.selectOptions.filter(opt => {
 			return this.props.defaultValue && this.props.defaultValue.indexOf(opt.value) !== -1
 		});
