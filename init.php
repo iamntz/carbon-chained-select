@@ -4,7 +4,7 @@ use Carbon_Fields\Carbon_Fields;
 use iamntz\carbonfields\chainedSelect\ChainedSelect_Field;
 
 define('CARBON_CHAINED_SELECT_DIR', __DIR__);
-define('CARBON_CHAINED_SELECT_VERSION', '3.0.3');
+define('CARBON_CHAINED_SELECT_VERSION', '3.0.4');
 
 
 Carbon_Fields::extend(ChainedSelect_Field::class, function ($container) {

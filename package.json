@@ -1,6 +1,6 @@
 {
   "name": "iamntz-carbon-uniqid",
-  "version": "3.0.3",
+  "version": "3.0.4",
   "scripts": {
     "start": "npm run development -- --watch",
     "version": "cross-var rexreplace \"(_VERSION', )(.*);\" \"$1'$npm_package_version');\" init.php",
